@@ -9,7 +9,7 @@ import com.example.qa.dao.question.QuestionDao;
 import com.example.qa.dao.question.QuestionRecord;
 import com.example.qa.service.ServiceException;
 import com.example.qa.util.DateUtils;
-import com.scalar.database.api.DistributedStorage;
+import com.scalar.db.api.DistributedStorage;
 import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,7 +1,7 @@
 package com.example.qa.dao;
 
-import com.scalar.database.api.DistributedStorage;
-import com.scalar.database.api.DistributedTransactionManager;
+import com.scalar.db.api.DistributedStorage;
+import com.scalar.db.api.DistributedTransactionManager;
 
 public interface ScalarDbFactory {
   DistributedStorage createDistributedStorage();

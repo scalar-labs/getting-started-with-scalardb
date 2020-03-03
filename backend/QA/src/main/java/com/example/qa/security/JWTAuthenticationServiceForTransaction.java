@@ -6,9 +6,9 @@ import com.example.qa.dao.DaoException;
 import com.example.qa.dao.ScalarDbManager;
 import com.example.qa.dao.account.AccountDao;
 import com.example.qa.dao.account.AccountRecord;
-import com.scalar.database.api.DistributedTransaction;
-import com.scalar.database.api.DistributedTransactionManager;
-import com.scalar.database.exception.transaction.CommitException;
+import com.scalar.db.api.DistributedTransaction;
+import com.scalar.db.api.DistributedTransactionManager;
+import com.scalar.db.exception.transaction.CommitException;
 import io.jsonwebtoken.Jwts;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +54,7 @@ class JWTAuthenticationServiceForTransaction extends JWTAuthenticationService {
       } catch (CommitException | DaoException e) {
         transaction.abort();
         throw new AuthenticationException("Error retrieving user to validate JWT authenticity", e);
-      } catch (com.scalar.database.exception.transaction.UnknownTransactionStatusException e) {
+      } catch (com.scalar.db.exception.transaction.UnknownTransactionStatusException e) {
         throw new UnknownTransactionStatusException(
             "Error : the transaction to retrieve the user associated with the JWT is in an unknown state",
             e);
