@@ -12,7 +12,7 @@ import com.example.qa.dao.question.QuestionDao;
 import com.example.qa.dao.question.QuestionRecord;
 import com.example.qa.service.ServiceException;
 import com.example.qa.util.DateUtils;
-import com.scalar.db.api.DistributedStorage;
+import com.scalar.database.api.DistributedStorage;
 import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

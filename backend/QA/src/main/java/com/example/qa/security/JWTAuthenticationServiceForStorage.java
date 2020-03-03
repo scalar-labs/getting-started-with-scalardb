@@ -6,7 +6,7 @@ import com.example.qa.dao.DaoException;
 import com.example.qa.dao.ScalarDbManager;
 import com.example.qa.dao.account.AccountDao;
 import com.example.qa.dao.account.AccountRecord;
-import com.scalar.db.api.DistributedStorage;
+import com.scalar.database.api.DistributedStorage;
 import io.jsonwebtoken.Jwts;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -72,10 +72,10 @@ The [**scalardb.properties**](backend/QA/src/main/resources/scalardb.properties)
 
 ```
 #ScalarDB database configuration
-scalar.db.contact_points=localhost
-scalar.db.contact_port=9042
-scalar.db.username=cassandra
-scalar.db.password=cassandra
+scalar.database.contact_points=localhost
+scalar.database.contact_port=9042
+scalar.database.username=cassandra
+scalar.database.password=cassandra
 ```
 
 #### Boot up the backend API

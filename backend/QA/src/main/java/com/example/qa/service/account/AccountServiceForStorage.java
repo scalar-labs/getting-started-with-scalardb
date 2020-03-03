@@ -5,7 +5,7 @@ import com.example.qa.dao.ScalarDbManager;
 import com.example.qa.dao.account.AccountDao;
 import com.example.qa.dao.account.AccountRecord;
 import com.example.qa.service.ServiceException;
-import com.scalar.db.api.DistributedStorage;
+import com.scalar.database.api.DistributedStorage;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;

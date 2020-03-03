@@ -1,12 +1,12 @@
 package com.example.qa.dao.answer;
 
 import com.example.qa.dao.DaoException;
-import com.scalar.db.api.*;
-import com.scalar.db.exception.storage.ExecutionException;
-import com.scalar.db.exception.transaction.CrudException;
-import com.scalar.db.io.BigIntValue;
-import com.scalar.db.io.Key;
-import com.scalar.db.io.TextValue;
+import com.scalar.database.api.*;
+import com.scalar.database.exception.storage.ExecutionException;
+import com.scalar.database.exception.transaction.CrudException;
+import com.scalar.database.io.BigIntValue;
+import com.scalar.database.io.Key;
+import com.scalar.database.io.TextValue;
 import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
