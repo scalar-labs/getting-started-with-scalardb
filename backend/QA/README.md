@@ -3,7 +3,7 @@
 #### アプリケーションを実行
 
 ```
-gradle bootRun
+sh gradlew bootRun
 ```
 `http://localhost:8090`で提供される
 
