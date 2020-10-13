@@ -1,0 +1,64 @@
+{
+  "qa.question": {
+    "transaction": false,
+    "partition-key": [
+      "date"
+    ],
+    "clustering-key": [
+      "created_at"
+    ],
+    "columns": {
+      "date": "TEXT",
+      "created_at": "BIGINT",
+      "title": "TEXT",
+      "user": "TEXT",
+      "context": "TEXT",
+      "updated_at": "BIGINT",
+      "number_of_answers": "INT"
+    },
+    "ru": 400
+  },
+
+  "qa.answer": {
+    "transaction": false,
+    "partition-key": [
+      "question_created_at"
+    ],
+    "clustering-key": [
+      "created_at"
+    ],
+    "columns": {
+      "question_created_at": "BIGINT",
+      "context": "TEXT",
+      "user": "TEXT",
+      "created_at": "BIGINT"
+    },
+    "ru": 400
+  },
+
+  "qa.account": {
+    "transaction": false,
+    "partition-key": [
+      "email"
+    ],
+    "clustering-key": [],
+    "columns": {
+      "email": "TEXT",
+      "password": "TEXT"
+    },
+    "ru": 400
+  },
+
+  "qa.firstQuestionDate": {
+    "transaction": false,
+    "partition-key": [
+      "id"
+    ],
+    "clustering-key": [],
+    "columns": {
+      "id": "TEXT",
+      "first_question_date": "TEXT"
+    },
+    "ru": 400
+  }
+}

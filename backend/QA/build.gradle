@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.0.3.RELEASE'
+        springBootVersion = '2.3.4.RELEASE'
     }
     repositories {
         mavenCentral()
@@ -33,7 +33,7 @@ repositories {
 
 dependencies {
     //Scalar DB library
-    compile group: 'com.scalar-labs', name: 'scalardb', version: '2.0.0'
+    compile group: 'com.scalar-labs', name: 'scalardb', version: '2.2.0'
     //Spring dependencies
     compile("org.springframework.boot:spring-boot-starter-web:${springBootVersion}") {
         exclude(group: 'ch.qos.logback')

@@ -14,13 +14,13 @@ import java.io.IOException;
 import org.springframework.stereotype.Component;
 
 @Component("com.example.qa.dao.LocalEnvironmentScalarDbFactory")
-public class LocallyConfiguredCassandraFactory implements ScalarDbFactory {
+public class LocallyConfiguredStorageFactory implements ScalarDbFactory {
   /** QA\src\main\resources\scalardb.properties) */
   private static final String SCALARDB_PROPERTIES = "scalardb.properties";
 
   private DatabaseConfig dbConfiguration = null;
 
-  public LocallyConfiguredCassandraFactory() throws IOException {
+  public LocallyConfiguredStorageFactory() throws IOException {
     dbConfiguration =
         new DatabaseConfig(
             new File(getClass().getClassLoader().getResource(SCALARDB_PROPERTIES).getFile()));
