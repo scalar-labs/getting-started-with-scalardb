@@ -15,8 +15,7 @@
       "context": "TEXT",
       "updated_at": "BIGINT",
       "number_of_answers": "INT"
-    },
-    "ru": 400
+    }
   },
 
   "qa.answer": {
@@ -32,8 +31,7 @@
       "context": "TEXT",
       "user": "TEXT",
       "created_at": "BIGINT"
-    },
-    "ru": 400
+    }
   },
 
   "qa.account": {
@@ -45,8 +43,7 @@
     "columns": {
       "email": "TEXT",
       "password": "TEXT"
-    },
-    "ru": 400
+    }
   },
 
   "qa.firstQuestionDate": {
@@ -58,7 +55,6 @@
     "columns": {
       "id": "TEXT",
       "first_question_date": "TEXT"
-    },
-    "ru": 400
+    }
   }
 }

@@ -1,6 +1,6 @@
 {
   "qa.question": {
-    "transaction": true,
+    "transaction": false,
     "partition-key": [
       "date"
     ],
@@ -15,12 +15,11 @@
       "context": "TEXT",
       "updated_at": "BIGINT",
       "number_of_answers": "INT"
-    },
-    "compaction-strategy": "LCS"
+    }
   },
 
   "qa.answer": {
-    "transaction": true,
+    "transaction": false,
     "partition-key": [
       "question_created_at"
     ],
@@ -32,12 +31,11 @@
       "context": "TEXT",
       "user": "TEXT",
       "created_at": "BIGINT"
-    },
-    "compaction-strategy": "LCS"
+    }
   },
 
   "qa.account": {
-    "transaction": true,
+    "transaction": false,
     "partition-key": [
       "email"
     ],
@@ -45,12 +43,11 @@
     "columns": {
       "email": "TEXT",
       "password": "TEXT"
-    },
-    "compaction-strategy": "LCS"
+    }
   },
 
   "qa.firstQuestionDate": {
-    "transaction": true,
+    "transaction": false,
     "partition-key": [
       "id"
     ],
@@ -58,7 +55,6 @@
     "columns": {
       "id": "TEXT",
       "first_question_date": "TEXT"
-    },
-    "compaction-strategy": "LCS"
+    }
   }
 }

@@ -11,5 +11,5 @@ demonstrate the functionalities of Scalar DB. The Q&A application is a web appli
 
 ## Getting Started
 
-### [QA Application with Cassandra](getting-started-with-cassandra.md)
-### [QA Application with Cosmos DB](getting-started-with-cosmosdb.md)
+### [QA Application with Scalar DB on Cassandra](getting-started-with-cassandra.md)
+### [QA Application with Scalar DB on Cosmos DB](getting-started-with-cosmosdb.md)
