@@ -42,18 +42,18 @@ The schema files are located inside the [database/](database/) folder.
     
 2 schema files (schema_storage.json, schema_transaction.json) are available, depending on if you want to run the application using the [Storage](#use-scalar-db-without-transaction) or [Transaction](#use-scalar-db-with-transaction) mode.
 
-Then, download the schema loader that matches with the version you use from scalardb releases, and run the following command to load the schema.
+Then, download the scalar schema standalone loader that matches with the version you use from scalardb releases, and run the following command to load the schema.
 
 For Cassandra
 
 ```bash
-java -jar scalar-schema-<version>.jar --cassandra -h <CASSANDRA_IP> -u <CASSNDRA_USER> -p <CASSANDRA_PASSWORD> -f schema.json [-n <NETWORK_STRATEGY> -R <REPLICATION_FACTOR>]
+java -jar scalar-schema-standalone-<version>.jar --cassandra -h <CASSANDRA_IP> -u <CASSNDRA_USER> -p <CASSANDRA_PASSWORD> -f schema.json [-n <NETWORK_STRATEGY> -R <REPLICATION_FACTOR>]
 ```
 
 For Cosmos DB
     
 ```bash
-java -jar scalar-schema-<version>.jar --cosmos -h <YOUR_ACCOUNT_URI> -p <YOUR_ACCOUNT_PASSWORD> -f schema.json
+java -jar scalar-schema-standalone-<version>.jar --cosmos -h <YOUR_ACCOUNT_URI> -p <YOUR_ACCOUNT_PASSWORD> -f schema.json
 ```
 
 
