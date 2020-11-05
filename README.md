@@ -42,13 +42,13 @@ This document contains different underlying storage/database (such as cassandra,
 
 Please install [Node.js](https://nodejs.org/en/download/)
 
-For Cassandra
+**For Cassandra**
 
 Please install [Scalar DB prerequisites](https://github.com/scalar-labs/scalardb/blob/master/docs/getting-started-with-cassandra.md#install-prerequisites).
 
 OR 
 
-For Cosmos DB
+**For Cosmos DB**
 
 Please install [Scalar DB prerequisites](https://github.com/scalar-labs/scalardb/blob/master/docs/getting-started-with-cosmosdb.md#install-prerequisites).
 
@@ -62,7 +62,7 @@ The schema files are located inside the [database/](database/) folder.
 
 Then, download the scalar schema standalone loader that matches with the version you use from scalardb releases, and run the following command to load the schema.
 
-For Cassandra
+**For Cassandra**
 
 ```bash
 java -jar scalar-schema-standalone-<version>.jar --cassandra -h <CASSANDRA_IP> -u <CASSNDRA_USER> -p <CASSANDRA_PASSWORD> -f schema.json [-n <NETWORK_STRATEGY> -R <REPLICATION_FACTOR>]
@@ -70,7 +70,7 @@ java -jar scalar-schema-standalone-<version>.jar --cassandra -h <CASSANDRA_IP> -
 
 OR
 
-For Cosmos DB
+**For Cosmos DB**
     
 ```bash
 java -jar scalar-schema-standalone-<version>.jar --cosmos -h <YOUR_ACCOUNT_URI> -p <YOUR_ACCOUNT_PASSWORD> -f schema.json
@@ -87,13 +87,13 @@ The backend is a Spring boot application using gradle as the build system. Befor
 
 The [**scalardb.properties**](backend/QA/src/main/resources/scalardb.properties) file holds the configuration for Scalar DB.
 
-For Cassandra
+**For Cassandra**
 
 Please follow [Configure Scalar DB](https://github.com/scalar-labs/scalardb/blob/master/docs/getting-started-with-cassandra.md#configure-scalar-db)
 
 OR
 
-For Cosmos DB
+**For Cosmos DB**
 
 Please follow [Configure Scalar DB](https://github.com/scalar-labs/scalardb/blob/master/docs/getting-started-with-cosmosdb.md#configure-scalar-db)
 
