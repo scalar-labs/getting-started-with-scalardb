@@ -36,7 +36,7 @@ The Q&A application is a web application frontend (single page application), bac
 Let's set up the environment for the demonstration so that you can try it out to have a better understanding of the functionalities. 
 We will explain how to develop this application with Scalar DB and what differs to use Scalar DB with and without transaction.
 
-This document contains different underlying storage/database (such as cassandra, cosmos db) set up and configurations, please follow only the ones you use.
+This document contains different underlying storage/database (such as cassandra, cosmos db) set up and configurations, Please follow any one of them.
 
 ## Set up the environment
 
