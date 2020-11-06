@@ -62,8 +62,6 @@ Then, download the scalar schema standalone loader that matches with the version
 java -jar scalar-schema-standalone-<version>.jar --cassandra -h <CASSANDRA_IP> -u <CASSNDRA_USER> -p <CASSANDRA_PASSWORD> -f schema.json [-n <NETWORK_STRATEGY> -R <REPLICATION_FACTOR>]
 ```
 
-OR
-
 **For Cosmos DB**
     
 ```bash
@@ -84,8 +82,6 @@ The [**scalardb.properties**](backend/QA/src/main/resources/scalardb.properties)
 **For Cassandra**
 
 Please follow [Configure Scalar DB on Cassandra](https://github.com/scalar-labs/scalardb/blob/master/docs/getting-started-with-cassandra.md#configure-scalar-db)
-
-OR
 
 **For Cosmos DB**
 
