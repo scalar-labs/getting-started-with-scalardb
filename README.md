@@ -36,31 +36,25 @@ The Q&A application is a web application frontend (single page application), bac
 Let's set up the environment for the demonstration so that you can try it out to have a better understanding of the functionalities. 
 We will explain how to develop this application with Scalar DB and what differs to use Scalar DB with and without transaction.
 
-This document contains different underlying storage/database (such as cassandra, cosmos db) set up and configurations, Please follow any one of them.
+This document contains different underlying storage/database (such as Cassandra, Cosmos DB) set up and configurations, Please follow any one of them.
 
-## Set up the environment
+## Install prerequisites
 
-Please install [Node.js](https://nodejs.org/en/download/)
+Following softwares are required to start the demonstration.
 
-**For Cassandra**
-
-Please install [Scalar DB prerequisites](https://github.com/scalar-labs/scalardb/blob/master/docs/getting-started-with-cassandra.md#install-prerequisites).
-
-OR 
-
-**For Cosmos DB**
-
-Please install [Scalar DB prerequisites](https://github.com/scalar-labs/scalardb/blob/master/docs/getting-started-with-cosmosdb.md#install-prerequisites).
+* Install [Scalar DB on Cassandra prerequisites](https://github.com/scalar-labs/scalardb/blob/master/docs/getting-started-with-cassandra.md#install-prerequisites) if you use Cassandra as a backend database.
+* Install [Scalar DB on Cosmos DB prerequisites](https://github.com/scalar-labs/scalardb/blob/master/docs/getting-started-with-cosmosdb.md#install-prerequisites) if you use Cosmos DB as a backend database.
+* Please install [Node.js](https://nodejs.org/en/download/)
 
 Here we assume Oracle JDK 8, Node js and the underlying storage/database such as Cassandra are properly configured before starting this demonstration.
 
-### Install the database model
+### Create a database schema
     
-The schema files are located inside the [database/](database/) folder.
+The schema files are located in the [database](database) directory.
     
 2 schema files (schema_storage.json, schema_transaction.json) are available, depending on if you want to run the application using the [Storage](#use-scalar-db-without-transaction) or [Transaction](#use-scalar-db-with-transaction) mode.
 
-Then, download the scalar schema standalone loader that matches with the version you use from scalardb releases, and run the following command to load the schema.
+Then, download the scalar schema standalone loader that matches with the version you use from [scalardb releases](https://github.com/scalar-labs/scalardb/releases), and run the following command to load the schema.
 
 **For Cassandra**
 
@@ -89,13 +83,13 @@ The [**scalardb.properties**](backend/QA/src/main/resources/scalardb.properties)
 
 **For Cassandra**
 
-Please follow [Configure Scalar DB](https://github.com/scalar-labs/scalardb/blob/master/docs/getting-started-with-cassandra.md#configure-scalar-db)
+Please follow [Configure Scalar DB on Cassandra](https://github.com/scalar-labs/scalardb/blob/master/docs/getting-started-with-cassandra.md#configure-scalar-db)
 
 OR
 
 **For Cosmos DB**
 
-Please follow [Configure Scalar DB](https://github.com/scalar-labs/scalardb/blob/master/docs/getting-started-with-cosmosdb.md#configure-scalar-db)
+Please follow [Configure Scalar DB on Cosmos DB](https://github.com/scalar-labs/scalardb/blob/master/docs/getting-started-with-cosmosdb.md#configure-scalar-db)
 
 #### Boot up the backend API
 
@@ -120,7 +114,7 @@ sh gradlew bootRun
 
 ### Deploy the frontend
 
-To run the front end, run in the [**/frontend**](frontend/) folder.
+To run the front end, run in the [**/frontend**](frontend) folder.
 
 ```bash
 make
