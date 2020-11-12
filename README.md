@@ -22,16 +22,16 @@
     - [Summary](#summary)
     - [Additional Resources](#additional-resources)
 
-In this tutorial we will use a sample Q&A application to demonstrate the functionalities of Scalar DB. 
+In this tutorial, we will use a sample Q&A application to demonstrate the functionalities of Scalar DB. 
 The Q&A application is a web application frontend (single page application), backend (HTTP API), and a Scalar DB supported database.
 
 ![Q&A architecture overview](img/architecture_overview.png)
 
  It implements three basic Q&A features
 
-- Question List
+- Question Listing
 - Question Submission
-- Answering Submission
+- Answer Submission
 
 Let's set up the environment for the demonstration so that you can try it out to have a better understanding of the functionalities. 
 We will explain how to develop this application with Scalar DB and what differs to use Scalar DB with and without transaction.
@@ -73,7 +73,7 @@ java -jar scalar-schema-standalone-<version>.jar --cosmos -h <YOUR_ACCOUNT_URI> 
 
 **Note** : The backend code is located inside the [**backend/QA**](backend/QA) folder.
 
-The backend is a Spring boot application using gradle as the build system. Before we boot it, let's look at DB configuration file.
+The backend is a Spring boot application using Gradle as the build system. Before we boot it, let's look at the DB configuration file.
 
 #### Configure the Scalar DB connection
 
@@ -91,7 +91,7 @@ Please follow [Configure Scalar DB on Cosmos DB](https://github.com/scalar-labs/
 
 The backend will expose a REST API on http://localhost:8090. The address and port can be configured in the [application.properties](https://github.com/scalar-labs/indetail/blob/master/Q%26A_application/backend/QA/src/main/resources/application.properties).
 
-To select in which mode the backend will be launched, set the following environnement variable to **transaction** or **storage**
+To select in which mode the backend will be launched, set the following environment variable to **transaction** or **storage**
 
 Storage:
 ```bash
@@ -120,7 +120,7 @@ It will download the dependencies, build the webpack and start it.
 
 ### Login to the application
 
-We when booted the REST API earlier, 3 users were registered in the database. Either one of them can be used to login http://localhost:8080/#/login
+When we boot the REST API earlier, 3 users were registered in the database. Either one of them can be used to login http://localhost:8080/#/login
 
 | Email         | Password |
 | ------------- | :------: |
@@ -130,19 +130,19 @@ We when booted the REST API earlier, 3 users were registered in the database. Ei
 
 ### Post and answer to a question
 
-After the login, the user is redirected the page containing the list of questions. No question is preregistered in the database so you need to add one by clicking on the **Submit a question** button.
+After the login, the user will be redirected to the page containing the list of questions. No question is preregistered in the database so you can add questions by clicking on the **Submit a question** button.
 
 On this page, you can write a title and content for a question and then submit it.
 
-After having submitted a question, you will be redirected to the page with the question details where you can consult and add answer.
+After submitting a question, you will be redirected to the page with the question details where you can consult and add an answer.
 
-Now, if you move back to the list of question, you will see the question you just added.
+Now, if you move back to the list of questions, you can see the question you just added.
 
 In the rest of the tutorial, we will focus on how to use the ScalarDB API.
 
 ## Use Scalar DB without transaction
 
-In this section, we will look in details how to perform atomic operations on the database by focusing on the **Question** table.
+In this section, we will look into the details on how to perform atomic operations on the database by focusing on the **Question** table.
 
 ### Design the data model
 
@@ -153,7 +153,7 @@ The model is composed of four tables :
 - Account : the user accounts
 - FirstQuestionDate : it records the day the first question was ever created. This field is used as the lower boundary when iterating through all of the questions recorded in the database. (Refer to the method `get(String start, int minimal)` in [QuestionServiceForStorage.java](https://github.com/scalar-labs/indetail/blob/master/Q%26A_application/backend/QA/src/main/java/com/example/qa/service/question/QuestionServiceForStorage.java) for more details)
 
-We define these tables in schema_storage file in format of [Scalar DB database schema](https://github.com/scalar-labs/scalardb/blob/master/docs/schema.md).
+We define these tables in the schema_storage file in the format of [Scalar DB database schema](https://github.com/scalar-labs/scalardb/blob/master/docs/schema.md).
 
 ```
 {
@@ -218,15 +218,15 @@ We define these tables in schema_storage file in format of [Scalar DB database s
 }
 ```
 
-Looking at this schema, you might be wandering why we used a composite primary key for the **question table** since the `date` field can be inferred from timestamp `created_at`.
+Looking at this schema, you might be wondering why we used a composite primary key for the **question table** since the `date` field can be inferred from timestamp `created_at`.
 
 The first key of a composite key called **partition key**.
-By default Scalar DB uses hash partioning based on the value of partition key.
-The records with same values of partition key will be put (duplicated) into the same nodes.
-Using hash partioning helps the scalability when a Scalar DB cluster is expanded.
+By default Scalar DB uses hash partitioning based on the value of the partition key.
+The records with the same values of partition key will be put (duplicated) into the same nodes.
+Using hash partitioning helps the scalability when a Scalar DB cluster is expanded.
 Furthermore, the records in the same partition can be retrieved easily.
 
-With this composite key design, all questions that will be created the same calendar day will have the same value for the `date` field. If we only used `created_at` as the primary key, this design would scale very well but we would not be able to retrieve multiples question with the `scan` method easily.
+With this composite key design, all questions that will be created on the same calendar day will have the same value for the `date` field. If we only used `created_at` as the primary key, this design would scale very well but we would not be able to retrieve the multiples questions with the `scan` method easily.
 In summary, having this composite key ensures it will scale well while also allowing the data to be looked up easily.
 
 Though, the current schema has its limitations. There can't be 2 questions created at the same time because these questions would have the same primary key. To avoid that we could add another id (UUID) as a second clustering key like the following.
@@ -297,8 +297,7 @@ try {
 
 **Note** : refers to the method *put(QuestionRecord record, DistributedTransaction transaction)* of [QuestionDao.java](https://github.com/scalar-labs/indetail/blob/master/Q%26A_application/backend/QA/src/main/java/com/example/qa/dao/question/QuestionDao.java) for more details.
 
-Partial update of an entry is supported by Scalar DB. To update the data that was previously inserted, we just need to create a `Put` object what will only contains the desired modification.
-
+Partial update of an entry is supported by Scalar DB. To update the data that was previously inserted, we just need to create a `Put` object what will only contain the desired modification.
 ```java
 // Update the context and the updated_at field of the desired question
 Put put =
@@ -345,8 +344,7 @@ try {
 
 The [**Scan**](https://scalar-labs.github.io/scalardb/javadoc/com/scalar/database/api/DistributedStorage.html#scan-com.scalar.database.api.Scan-) method is used to retrieve all the records sharing the same partition key. In this example, we use it to retrieve all the questions that were created on the same day.
 
-It is to be noted that ordering of results of a Scan is dependent on the underlining implementations, so you need to explicitly specify the ordering of results (ascendant or descendant) if desired. The ordering can only be performed on the clustering key.
-
+It is to be noted that the ordering of results of a Scan is dependent on the underlining implementations, so you need to explicitly specify the ordering of results (ascendant or descendant) if desired. The ordering can only be performed on the clustering key.
 ```java
 Scan scan = new Scan(new Key(new TextValue("date","20180801")))
         .forNamespace("qa")
@@ -374,7 +372,7 @@ For this reason, we also decided to implement a thread safe implementation of th
 
 ### Impact on the data model
 
-To apply transaction, we can just add a key `transaction` and value as `true` in Scalar DB scheme. For instance, we modify our qa.question schema.
+To apply transaction, we can just add a key `transaction` and value as `true` in the Scalar DB scheme. For instance, we modify our qa.question schema.
 ```
 {
   "qa.question": {
@@ -411,7 +409,7 @@ DistributedTransactionManager transaction = injector.getInstance(TransactionModu
 
 ### Execute a transaction
 
-A `DistributedTransaction` can be retrieved from the **transactionManager**. Then use this objects to execute the desired operations and eventually commit them.
+A `DistributedTransaction` can be retrieved from the **transactionManager**. Then use these objects to execute the desired operations and eventually commit them.
 
 ```java
 //Create the transaction
@@ -436,7 +434,7 @@ transaction.commit();
 
 ### Handling transaction error
 
-The transaction `commit()` method could throw 2 kind of exceptions :
+The transaction `commit()` method could throw 2 kinds of exceptions :
 
 - `CommitException` which indicates a commit has failed. In that case, it is recommended to roll back the transaction using `transaction.abort()`
 - `UnknownTransactionStatusException` indicates the transaction commit is in an unknown status. It may or not have been committed.
