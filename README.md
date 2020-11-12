@@ -256,7 +256,7 @@ Though, the current schema has its limitations. There can't be 2 questions creat
 }
 ```
 
-If it's need to specify `NETWORK STRATEGY` for Cassandra and `BASE RESOURCE UNIT` for cosmos DB, please see [Schema Tool for Scalar DB](https://github.com/scalar-labs/scalardb/blob/master/tools/scalar-schema/README.md)
+You may want to specify `NETWORK STRATEGY` for Cassandra and `BASE RESOURCE UNIT` for Cosmos DB depending on your needs. Please see [Schema Tool for Scalar DB](https://github.com/scalar-labs/scalardb/blob/master/tools/scalar-schema/README.md)
 
 ### Initialize DistributedStorage
 
