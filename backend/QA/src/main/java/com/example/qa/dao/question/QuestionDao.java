@@ -184,8 +184,8 @@ public class QuestionDao {
 
   /** Update the timestamp of the last update and the number of answer */
   public void update(
-          String date, long createdAt, long updatedAt, int numAnswer, DistributedStorage storage)
-          throws DaoException {
+    String date, long createdAt, long updatedAt, int numAnswer, DistributedStorage storage)
+    throws DaoException {
     Put put = createPutWithForUpdate(date, createdAt, updatedAt, numAnswer);
 
     /** To manage partial updates on Cosmos DB, Cosmos DB does not currently support partial
