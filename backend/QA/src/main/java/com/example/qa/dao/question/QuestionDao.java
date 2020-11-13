@@ -184,9 +184,16 @@ public class QuestionDao {
 
   /** Update the timestamp of the last update and the number of answer */
   public void update(
-      String date, long createdAt, long updatedAt, int numAnswer, QuestionRecord record,
-      DistributedStorage storage) throws DaoException {
-    Put put = createPutWithForUpdate(date, createdAt, updatedAt, numAnswer, record);
+          String date, long createdAt, long updatedAt, int numAnswer, DistributedStorage storage)
+          throws DaoException {
+    Put put = createPutWithForUpdate(date, createdAt, updatedAt, numAnswer);
+
+    /** To manage partial updates on Cosmos DB, Cosmos DB does not currently support partial
+     *  document updates*/
+    QuestionRecord question = get(date, createdAt, storage);
+    put.withValue(new TextValue(COL_NAME_TITLE, question.getTitle()))
+    .withValue(new TextValue(COL_NAME_USER, question.getUser()))
+    .withValue(new TextValue(COL_NAME_CONTEXT, question.getContext()));
 
     try {
       storage.put(put);
@@ -219,9 +226,8 @@ public class QuestionDao {
       long createdAt,
       long updatedAt,
       int numAnswer,
-      QuestionRecord record,
       DistributedTransaction transaction) {
-    Put put = createPutWithForUpdate(date, createdAt, updatedAt, numAnswer, record);
+    Put put = createPutWithForUpdate(date, createdAt, updatedAt, numAnswer);
     put.withConsistency(Consistency.LINEARIZABLE);
 
     transaction.put(put);
@@ -236,17 +242,13 @@ public class QuestionDao {
             + numAnswer);
   }
 
-  private Put createPutWithForUpdate(String date, long createdAt, long updatedAt, int numAnswer,
-                                     QuestionRecord record) {
+  private Put createPutWithForUpdate(String date, long createdAt, long updatedAt, int numAnswer) {
     Put put =
         new Put(
                 new Key(new TextValue(PARTITION_KEY_NAME_DATE, date)),
                 new Key(new BigIntValue(CLUSTERING_KEY_NAME_CREATED_AT, createdAt)))
             .forNamespace(NAMESPACE)
             .forTable(TABLE_NAME)
-            .withValue(new TextValue(COL_NAME_TITLE, record.getTitle()))
-            .withValue(new TextValue(COL_NAME_USER, record.getUser()))
-            .withValue(new TextValue(COL_NAME_CONTEXT, record.getContext()))
             .withValue(new BigIntValue(COL_NAME_UPDATED_AT, updatedAt))
             .withValue(new IntValue(COL_NAME_NUMBER_OF_ANSWERS, numAnswer));
     return put;

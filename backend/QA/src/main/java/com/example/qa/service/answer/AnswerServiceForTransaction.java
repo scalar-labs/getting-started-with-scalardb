@@ -79,7 +79,6 @@ public class AnswerServiceForTransaction implements AnswerService {
           question.getCreatedAt(),
           new Date().getTime(),
           question.getNumberOfAnswers() + 1,
-          question,
           transaction);
       transaction.commit();
     } catch (DaoException e) {

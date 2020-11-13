@@ -67,7 +67,6 @@ public class AnswerServiceForStorage implements AnswerService {
           question.getCreatedAt(),
           new Date().getTime(),
           question.getNumberOfAnswers() + 1,
-          question,
           storage);
 
     } catch (DaoException e) {
