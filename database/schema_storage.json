@@ -1,6 +1,5 @@
 {
   "qa.question": {
-    "transaction": false,
     "partition-key": [
       "date"
     ],
@@ -19,7 +18,6 @@
   },
 
   "qa.answer": {
-    "transaction": false,
     "partition-key": [
       "question_created_at"
     ],
@@ -35,7 +33,6 @@
   },
 
   "qa.account": {
-    "transaction": false,
     "partition-key": [
       "email"
     ],
@@ -47,7 +44,6 @@
   },
 
   "qa.firstQuestionDate": {
-    "transaction": false,
     "partition-key": [
       "id"
     ],
