@@ -188,14 +188,6 @@ public class QuestionDao {
       throws DaoException {
     Put put = createPutWithForUpdate(date, createdAt, updatedAt, numAnswer);
 
-    /** Read the updating record and update all values for a workaround of the partial update
-     * because Cosmos DB does not support partial updating.
-     * For other data stores, this is not needed. */
-    QuestionRecord question = get(date, createdAt, storage);
-    put.withValue(new TextValue(COL_NAME_TITLE, question.getTitle()))
-            .withValue(new TextValue(COL_NAME_USER, question.getUser()))
-            .withValue(new TextValue(COL_NAME_CONTEXT, question.getContext()));
-
     try {
       storage.put(put);
     } catch (ExecutionException e) {
