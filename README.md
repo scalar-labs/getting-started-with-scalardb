@@ -46,7 +46,7 @@ Following softwares are required to start the demonstration.
 * Install [Scalar DB on Cosmos DB prerequisites](https://github.com/scalar-labs/scalardb/blob/master/docs/getting-started-with-cosmosdb.md#install-prerequisites) if you use Cosmos DB as a backend database.
 * Please install [Node.js](https://nodejs.org/en/download/)
 
-Here we assume Oracle JDK 8, Node js and the underlying storage/database such as Cassandra are properly configured before starting this demonstration.
+Here we assume Oracle JDK 8, Node.js, and the underlying storage/database such as Cassandra are properly configured before starting this demonstration.
 
 ### Create a database schema
     
