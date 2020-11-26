@@ -3,7 +3,7 @@
     - [Set up the environment](#set-up-the-environment)
         - [Install the database model](#install-the-database-model)
         - [Deploy the REST API](#deploy-the-rest-api)
-            - [Configure the Cassandra connection](#configure-the-cassandra-connection)
+            - [Configure the Scalar DB connection](#configure-the-scalar-db-connection)
             - [Boot up the backend API](#boot-up-the-backend-api)
         - [Deploy the frontend](#deploy-the-frontend)
         - [Login to the application](#login-to-the-application)
@@ -22,67 +22,76 @@
     - [Summary](#summary)
     - [Additional Resources](#additional-resources)
 
-In this tutorial we will use a sample Q&A application to
-demonstrate the functionalities of Scalar DB. The Q&A application is a web application frontend (single page application), backend (HTTP API), and a Scalar DB supported database.
+In this tutorial, we will use a sample Q&A application to demonstrate the functionalities of Scalar DB. 
+The Q&A application is a web application frontend (single page application), backend (HTTP API), and a Scalar DB supported database.
 
 ![Q&A architecture overview](img/architecture_overview.png)
 
  It implements three basic Q&A features
 
-- Question List
+- Question Listing
 - Question Submission
-- Answering Submission
+- Answer Submission
 
-Let's set up the environment for the demonstration so that you can try it out to have a better understanding of the functionalities. We will explain how to develop this application with Scalar DB and what differs to use Scalar DB with and without transaction.
+Let's set up the environment for the demonstration so that you can try it out to have a better understanding of the functionalities. 
+We will explain how to develop this application with Scalar DB and what differs to use Scalar DB with and without transaction.
 
-## Set up the environment
+This document contains different underlying storage/database (such as Cassandra, Cosmos DB) set up and configurations, Please follow any one of them.
 
-Please install [Scalar DB prerequisites](https://github.com/scalar-labs/scalardb/blob/master/docs/getting-started.md#install-prerequisites), [Node.js](https://nodejs.org/en/download/) and [yarn](https://yarnpkg.com/en/docs/install) before running this demonstration.
+## Install prerequisites
 
-### Install the database model
+Following softwares are required to start the demonstration.
 
-To install the database schema, we will use the [schema tools](https://github.com/scalar-labs/scalardb/tree/master/tools/schema) of ScalarDB.
-The schema files are located inside the [/database](https://github.com/scalar-labs/indetail/tree/master/Q%26A_application/database) folder.
+* Install [Scalar DB on Cassandra prerequisites](https://github.com/scalar-labs/scalardb/blob/master/docs/getting-started-with-cassandra.md#install-prerequisites) if you use Cassandra as a backend database.
+* Install [Scalar DB on Cosmos DB prerequisites](https://github.com/scalar-labs/scalardb/blob/master/docs/getting-started-with-cosmosdb.md#install-prerequisites) if you use Cosmos DB as a backend database.
+* Please install [Node.js](https://nodejs.org/en/download/)
 
-2 schema files are available, depending if you want to run the application using the [Storage](#use-scalar-db-without-transaction) or [Transaction](#use-scalar-db-with-transaction) mode.
+Here we assume Oracle JDK 8, Node.js, and the underlying storage/database such as Cassandra are properly configured before starting this demonstration.
 
-Storage :
+### Create a database schema
+    
+The schema files are located in the [database](database) directory.
+    
+2 schema files (schema_storage.json, schema_transaction.json) are available, depending on if you want to run the application using the [Storage](#use-scalar-db-without-transaction) or [Transaction](#use-scalar-db-with-transaction) mode.
+
+Then, download the scalar schema standalone loader that matches with the version you use from [scalardb releases](https://github.com/scalar-labs/scalardb/releases), and run the following command to load the schema.
+
+**For Cassandra**
 
 ```bash
-$PATH_TO_SCALARDB/tools/schema/loader schema.sdbql
+java -jar scalar-schema-standalone-<version>.jar --cassandra -h <CASSANDRA_IP> -u <CASSNDRA_USER> -p <CASSANDRA_PASSWORD> -f schema.json [-n <NETWORK_STRATEGY> -R <REPLICATION_FACTOR>]
 ```
 
-Transaction :
-
+**For Cosmos DB**
+    
 ```bash
-$PATH_TO_SCALARDB/tools/schema/loader schema_transaction.sdbql
+java -jar scalar-schema-standalone-<version>.jar --cosmos -h <YOUR_ACCOUNT_URI> -p <YOUR_ACCOUNT_PASSWORD> -f schema.json
 ```
 
-Now that the database model is set up, we can focus on starting the backend exposing an API to interact with Scalar DB.
 
 ### Deploy the REST API
 
-**Note** : The backend code is located inside the [**/backend/QA**](https://github.com/scalar-labs/indetail/tree/master/Q%26A_application/backend/QA) folder.
+**Note** : The backend code is located inside the [**backend/QA**](backend/QA) folder.
 
-The backend is a Spring boot application using gradle as the build system. Before we boot it, let's look at DB configuration file.
+The backend is a Spring boot application using Gradle as the build system. Before we boot it, let's look at the DB configuration file.
 
-#### Configure the Cassandra connection
+#### Configure the Scalar DB connection
 
-The [**scalardb.properties**](backend/QA/src/main/resources/scalardb.properties) file holds the configuration for Scalar DB. Basically, it describes the Cassandra installation that will be used.
+The [**scalardb.properties**](backend/QA/src/main/resources/scalardb.properties) file holds the configuration for Scalar DB.
 
-```
-#ScalarDB database configuration
-scalar.db.contact_points=localhost
-scalar.db.contact_port=9042
-scalar.db.username=cassandra
-scalar.db.password=cassandra
-```
+**For Cassandra**
+
+Please follow [Configure Scalar DB on Cassandra](https://github.com/scalar-labs/scalardb/blob/master/docs/getting-started-with-cassandra.md#configure-scalar-db)
+
+**For Cosmos DB**
+
+Please follow [Configure Scalar DB on Cosmos DB](https://github.com/scalar-labs/scalardb/blob/master/docs/getting-started-with-cosmosdb.md#configure-scalar-db)
 
 #### Boot up the backend API
 
 The backend will expose a REST API on http://localhost:8090. The address and port can be configured in the [application.properties](https://github.com/scalar-labs/indetail/blob/master/Q%26A_application/backend/QA/src/main/resources/application.properties).
 
-To select in which mode the backend will be launched, set the following environnement variable to **transaction** or **storage**
+To select in which mode the backend will be launched, set the following environment variable to **transaction** or **storage**
 
 Storage:
 ```bash
@@ -101,7 +110,7 @@ sh gradlew bootRun
 
 ### Deploy the frontend
 
-To run the front end, run in the [**/frontend**](https://github.com/scalar-labs/indetail/tree/master/Q%26A_application/frontend) folder.
+To run the front end, run in the [**/frontend**](frontend) folder.
 
 ```bash
 make
@@ -111,7 +120,7 @@ It will download the dependencies, build the webpack and start it.
 
 ### Login to the application
 
-We when booted the REST API earlier, 3 users were registered in the database. Either one of them can be used to login http://localhost:8080/#/login
+When we boot the REST API earlier, 3 users were registered in the database. Either one of them can be used to login http://localhost:8080/#/login
 
 | Email         | Password |
 | ------------- | :------: |
@@ -121,19 +130,19 @@ We when booted the REST API earlier, 3 users were registered in the database. Ei
 
 ### Post and answer to a question
 
-After the login, the user is redirected the page containing the list of questions. No question is preregistered in the database so you need to add one by clicking on the **Submit a question** button.
+After the login, the user will be redirected to the page containing the list of questions. No question is preregistered in the database so you can add questions by clicking on the **Submit a question** button.
 
 On this page, you can write a title and content for a question and then submit it.
 
-After having submitted a question, you will be redirected to the page with the question details where you can consult and add answer.
+After submitting a question, you will be redirected to the page with the question details where you can consult and add an answer.
 
-Now, if you move back to the list of question, you will see the question you just added.
+Now, if you move back to the list of questions, you can see the question you just added.
 
 In the rest of the tutorial, we will focus on how to use the ScalarDB API.
 
 ## Use Scalar DB without transaction
 
-In this section, we will look in details how to perform atomic operations on the database by focusing on the **Question** table.
+In this section, we will look into the details on how to perform atomic operations on the database by focusing on the **Question** table.
 
 ### Design the data model
 
@@ -144,66 +153,110 @@ The model is composed of four tables :
 - Account : the user accounts
 - FirstQuestionDate : it records the day the first question was ever created. This field is used as the lower boundary when iterating through all of the questions recorded in the database. (Refer to the method `get(String start, int minimal)` in [QuestionServiceForStorage.java](https://github.com/scalar-labs/indetail/blob/master/Q%26A_application/backend/QA/src/main/java/com/example/qa/service/question/QuestionServiceForStorage.java) for more details)
 
-We define these tables in [schema.sdbql](database/schema.sdbql) in format of [Scalar DB database schema](https://github.com/scalar-labs/scalardb/blob/master/docs/schema.md).
+We define these tables in the schema_storage file in the format of [Scalar DB database schema](https://github.com/scalar-labs/scalardb/blob/master/docs/schema.md).
 
 ```
-REPLICATION FACTOR 1;
+{
+  "qa.question": {
+    "transaction": false,
+    "partition-key": [
+      "date"
+    ],
+    "clustering-key": [
+      "created_at"
+    ],
+    "columns": {
+      "date": "TEXT",
+      "created_at": "BIGINT",
+      "title": "TEXT",
+      "user": "TEXT",
+      "context": "TEXT",
+      "updated_at": "BIGINT",
+      "number_of_answers": "INT"
+    }
+  },
 
-CREATE NAMESPACE qa;
+  "qa.answer": {
+    "transaction": false,
+    "partition-key": [
+      "question_created_at"
+    ],
+    "clustering-key": [
+      "created_at"
+    ],
+    "columns": {
+      "question_created_at": "BIGINT",
+      "context": "TEXT",
+      "user": "TEXT",
+      "created_at": "BIGINT"
+    }
+  },
 
-CREATE TABLE qa.question (
-    date TEXT PARTITIONKEY,
-    created_at BIGINT CLUSTERINGKEY,
-    title TEXT,
-    user TEXT,
-    context TEXT,
-    updated_at BIGINT,
-    number_of_answers INT,
-);
+  "qa.account": {
+    "transaction": false,
+    "partition-key": [
+      "email"
+    ],
+    "clustering-key": [],
+    "columns": {
+      "email": "TEXT",
+      "password": "TEXT"
+    }
+  },
 
-CREATE TABLE qa.answer (
-    question_created_at BIGINT PARTITIONKEY,
-    context TEXT,
-    user TEXT,
-    created_at BIGINT CLUSTERINGKEY,
-);
-
-CREATE TABLE qa.account (
-    email TEXT PARTITIONKEY,
-    password TEXT,
-);
-
-CREATE TABLE qa.firstQuestionDate (
-    id TEXT PARTITIONKEY,
-    first_question_date TEXT,
-);
+  "qa.firstQuestionDate": {
+    "transaction": false,
+    "partition-key": [
+      "id"
+    ],
+    "clustering-key": [],
+    "columns": {
+      "id": "TEXT",
+      "first_question_date": "TEXT"
+    }
+  }
+}
 ```
 
-Looking at this schema, you might be wandering why we used a composite primary key for the **question table** since the `date` field can be inferred from timestamp `created_at`.
+Looking at this schema, you might be wondering why we used a composite primary key for the **question table** since the `date` field can be inferred from timestamp `created_at`.
 
 The first key of a composite key called **partition key**.
-By default Scalar DB uses hash partioning based on the value of partition key.
-The records with same values of partition key will be put (duplicated) into the same nodes.
-Using hash partioning helps the scalability when a Scalar DB cluster is expanded.
+By default Scalar DB uses hash partitioning based on the value of the partition key.
+The records with the same values of partition key will be put (duplicated) into the same nodes.
+Using hash partitioning helps the scalability when a Scalar DB cluster is expanded.
 Furthermore, the records in the same partition can be retrieved easily.
 
-With this composite key design, all questions that will be created the same calendar day will have the same value for the `date` field. If we only used `created_at` as the primary key, this design would scale very well but we would not be able to retrieve multiples question with the `scan` method easily.
+With this composite key design, all questions that will be created on the same calendar day will have the same value for the `date` field. If we only used `created_at` as the primary key, this design would scale very well but we would not be able to retrieve the multiples questions with the `scan` method easily.
 In summary, having this composite key ensures it will scale well while also allowing the data to be looked up easily.
 
 Though, the current schema has its limitations. There can't be 2 questions created at the same time because these questions would have the same primary key. To avoid that we could add another id (UUID) as a second clustering key like the following.
 
 ```
-CREATE TABLE qa.question (
-    date TEXT PARTITIONKEY,
-    created_at BIGINT CLUSTERINGKEY,
-    uuid BIGINT CLUSTERINGKEY,
-    title TEXT,
-    user TEXT,
-    context TEXT,
-    updated_at BIGINT,
-    number_of_answers INT,
-);
+{
+  "qa.question": {
+    "transaction": false,
+    "partition-key": [
+      "date"
+    ],
+    "clustering-key": [
+      "created_at",
+      "uuid"
+    ],
+    "columns": {
+      "date": "TEXT",
+      "created_at": "BIGINT",
+      "uuid": "BIGINT",
+      "title": "TEXT",
+      "user": "TEXT",
+      "context": "TEXT",
+      "updated_at": "BIGINT",
+      "number_of_answers": "INT"
+    }
+  }
+}
 ```
+
+You may want to specify `NETWORK STRATEGY` for Cassandra and `BASE RESOURCE UNIT` for Cosmos DB depending on your needs. Please see [Schema Tool for Scalar DB](https://github.com/scalar-labs/scalardb/blob/master/tools/scalar-schema/README.md)
 
 ### Initialize DistributedStorage
 
@@ -216,7 +269,7 @@ Injector injector = Guice.createInjector(new StorageModule(config));
 DistributedStorage storage = injector.getInstance(StorageService.class);
 ```
 
-**Note** : refers to the class constructor and the *createDistributedStorage()* method of [LocallyConfiguredCassandraFactory.java](https://github.com/scalar-labs/indetail/blob/master/Q%26A_application/backend/QA/src/main/java/com/example/qa/dao/LocallyConfiguredCassandraFactory.java) for more details
+**Note** : refers to the class constructor and the *createDistributedStorage()* method of [LocallyConfiguredStorageFactory.java](https://github.com/scalar-labs/indetail/blob/master/Q%26A_application/backend/QA/src/main/java/com/example/qa/dao/LocallyConfiguredStorageFactory.java) for more details
 
 ### Insert and update data with Put
 
@@ -244,8 +297,7 @@ try {
 
 **Note** : refers to the method *put(QuestionRecord record, DistributedTransaction transaction)* of [QuestionDao.java](https://github.com/scalar-labs/indetail/blob/master/Q%26A_application/backend/QA/src/main/java/com/example/qa/dao/question/QuestionDao.java) for more details.
 
-Partial update of an entry is supported by Scalar DB. To update the data that was previously inserted, we just need to create a `Put` object what will only contains the desired modification.
-
+Partial update of an entry is supported by Scalar DB. To update the data that was previously inserted, we just need to create a `Put` object what will only contain the desired modification.
 ```java
 // Update the context and the updated_at field of the desired question
 Put put =
@@ -292,8 +344,7 @@ try {
 
 The [**Scan**](https://scalar-labs.github.io/scalardb/javadoc/com/scalar/database/api/DistributedStorage.html#scan-com.scalar.database.api.Scan-) method is used to retrieve all the records sharing the same partition key. In this example, we use it to retrieve all the questions that were created on the same day.
 
-It is to be noted that ordering of results of a Scan is dependent on the underlining implementations, so you need to explicitly specify the ordering of results (ascendant or descendant) if desired. The ordering can only be performed on the clustering key.
-
+It is to be noted that the ordering of results of a Scan is dependent on the underlining implementations, so you need to explicitly specify the ordering of results (ascendant or descendant) if desired. The ordering can only be performed on the clustering key.
 ```java
 Scan scan = new Scan(new Key(new TextValue("date","20180801")))
         .forNamespace("qa")
@@ -321,17 +372,28 @@ For this reason, we also decided to implement a thread safe implementation of th
 
 ### Impact on the data model
 
-To apply transaction, we can just add a keyword `TRANSACTION` before table name in Scalar DB scheme. For instance, we modify our qa.question talbe.
+To apply transaction, we can just add a key `transaction` and value as `true` in the Scalar DB scheme. For instance, we modify our qa.question schema.
 ```
-CREATE TRANSACTION TABLE qa.question (
-  date TEXT PARTITIONKEY,
-  created_at BIGINT CLUSTERINGKEY,
-  title TEXT,
-  user TEXT,
-  context TEXT,
-  updated_at BIGINT,
-  number_of_answers INT,
-);
+{
+  "qa.question": {
+    "transaction": true,
+    "partition-key": [
+      "date"
+    ],
+    "clustering-key": [
+      "created_at"
+    ],
+    "columns": {
+      "date": "TEXT",
+      "created_at": "BIGINT",
+      "title": "TEXT",
+      "user": "TEXT",
+      "context": "TEXT",
+      "updated_at": "BIGINT",
+      "number_of_answers": "INT"
+    }
+  }
+}
 ```
 
 ### Initialize DistributedTransactionManager
@@ -343,11 +405,11 @@ Injector injector = Guice.createInjector(new TransactionModule(config));
 DistributedTransactionManager transaction = injector.getInstance(TransactionModule.class);
 ```
 
-**Note** : refers to the method *createDistributedTransactionManager()* of [LocallyConfiguredCassandraFactory.java](https://github.com/scalar-labs/indetail/blob/master/Q&A_application/backend/QA/src/main/java/com/example/qa/dao/LocallyConfiguredCassandraFactory.java) for more details.
+**Note** : refers to the method *createDistributedTransactionManager()* of [LocallyConfiguredStorageFactory.java](https://github.com/scalar-labs/indetail/blob/master/Q&A_application/backend/QA/src/main/java/com/example/qa/dao/LocallyConfiguredStorageFactory.java) for more details.
 
 ### Execute a transaction
 
-A `DistributedTransaction` can be retrieved from the **transactionManager**. Then use this objects to execute the desired operations and eventually commit them.
+A `DistributedTransaction` can be retrieved from the **transactionManager**. Then use these objects to execute the desired operations and eventually commit them.
 
 ```java
 //Create the transaction
@@ -372,7 +434,7 @@ transaction.commit();
 
 ### Handling transaction error
 
-The transaction `commit()` method could throw 2 kind of exceptions :
+The transaction `commit()` method could throw 2 kinds of exceptions :
 
 - `CommitException` which indicates a commit has failed. In that case, it is recommended to roll back the transaction using `transaction.abort()`
 - `UnknownTransactionStatusException` indicates the transaction commit is in an unknown status. It may or not have been committed.
@@ -385,8 +447,10 @@ This tutorial first explained how to set up the Q&A application before it showed
 
 For more information about the Scalar DB please refer to:
 
-- Getting Started : https://github.com/scalar-labs/scalardb/blob/master/docs/getting-started.md
+- Getting Started : https://github.com/scalar-labs/scalardb/blob/master/docs/README.md
 - Design Document : https://github.com/scalar-labs/scalardb/blob/master/docs/design.md
 - Javadoc : https://scalar-labs.github.io/scalardb/javadoc/
+- Schema Tool: https://github.com/scalar-labs/scalardb/blob/master/tools/scalar-schema/README.md
+
 
 On the other hand, if you are looking for concrete implementations examples and best practices, please take a look at the Q&A application source code.

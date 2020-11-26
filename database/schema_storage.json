@@ -1,0 +1,56 @@
+{
+  "qa.question": {
+    "partition-key": [
+      "date"
+    ],
+    "clustering-key": [
+      "created_at"
+    ],
+    "columns": {
+      "date": "TEXT",
+      "created_at": "BIGINT",
+      "title": "TEXT",
+      "user": "TEXT",
+      "context": "TEXT",
+      "updated_at": "BIGINT",
+      "number_of_answers": "INT"
+    }
+  },
+
+  "qa.answer": {
+    "partition-key": [
+      "question_created_at"
+    ],
+    "clustering-key": [
+      "created_at"
+    ],
+    "columns": {
+      "question_created_at": "BIGINT",
+      "context": "TEXT",
+      "user": "TEXT",
+      "created_at": "BIGINT"
+    }
+  },
+
+  "qa.account": {
+    "partition-key": [
+      "email"
+    ],
+    "clustering-key": [],
+    "columns": {
+      "email": "TEXT",
+      "password": "TEXT"
+    }
+  },
+
+  "qa.firstQuestionDate": {
+    "partition-key": [
+      "id"
+    ],
+    "clustering-key": [],
+    "columns": {
+      "id": "TEXT",
+      "first_question_date": "TEXT"
+    }
+  }
+}
