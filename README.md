@@ -44,6 +44,7 @@ Following softwares are required to start the demonstration.
 
 * Install [Scalar DB on Cassandra prerequisites](https://github.com/scalar-labs/scalardb/blob/master/docs/getting-started-with-cassandra.md#install-prerequisites) if you use Cassandra as a backend database.
 * Install [Scalar DB on Cosmos DB prerequisites](https://github.com/scalar-labs/scalardb/blob/master/docs/getting-started-with-cosmosdb.md#install-prerequisites) if you use Cosmos DB as a backend database.
+* Install [Scalar DB on DynamoDB prerequisites](https://github.com/scalar-labs/scalardb/blob/master/docs/getting-started-with-dynamodb.md#install-prerequisites) if you use DynamoDB as a backend database.
 * Please install [Node.js](https://nodejs.org/en/download/)
 
 Here we assume Oracle JDK 8, Node.js, and the underlying storage/database such as Cassandra are properly configured before starting this demonstration.
@@ -68,6 +69,11 @@ java -jar scalar-schema-standalone-<version>.jar --cassandra -h <CASSANDRA_IP> -
 java -jar scalar-schema-standalone-<version>.jar --cosmos -h <YOUR_ACCOUNT_URI> -p <YOUR_ACCOUNT_PASSWORD> -f schema.json
 ```
 
+**For DynamoDB**
+
+```bash
+java -jar scalar-schema-standalone-<version>.jar --dynamo -u <AWS_ACCESS_KEY_ID> -p <AWS_ACCESS_SECRET_KEY> --region <REGION> -f schema.json
+```
 
 ### Deploy the REST API
 
@@ -86,6 +92,10 @@ Please follow [Configure Scalar DB on Cassandra](https://github.com/scalar-labs/
 **For Cosmos DB**
 
 Please follow [Configure Scalar DB on Cosmos DB](https://github.com/scalar-labs/scalardb/blob/master/docs/getting-started-with-cosmosdb.md#configure-scalar-db)
+
+**For DynamoDB**
+
+Please follow [Configure Scalar DB on DynamoDB](https://github.com/scalar-labs/scalardb/blob/master/docs/getting-started-with-dynamodb.md#configure-scalar-db)
 
 #### Boot up the backend API
 
