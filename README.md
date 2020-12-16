@@ -42,9 +42,9 @@ This document contains different underlying storage/database (such as Cassandra,
 
 Following softwares are required to start the demonstration.
 
-* Install [Scalar DB on Cassandra prerequisites](https://github.com/scalar-labs/scalardb/blob/master/docs/getting-started-with-cassandra.md#install-prerequisites) if you use Cassandra as a backend database.
-* Install [Scalar DB on Cosmos DB prerequisites](https://github.com/scalar-labs/scalardb/blob/master/docs/getting-started-with-cosmosdb.md#install-prerequisites) if you use Cosmos DB as a backend database.
-* Install [Scalar DB on DynamoDB prerequisites](https://github.com/scalar-labs/scalardb/blob/master/docs/getting-started-with-dynamodb.md#install-prerequisites) if you use DynamoDB as a backend database.
+* Install [Scalar DB on Cassandra prerequisites](https://github.com/scalar-labs/scalardb/blob/master/docs/getting-started-with-scalardb-on-cassandra.md#install-prerequisites) if you use Cassandra as a backend database.
+* Install [Scalar DB on Cosmos DB prerequisites](https://github.com/scalar-labs/scalardb/blob/master/docs/getting-started-with-scalardb-on-cosmosdb.md#install-prerequisites) if you use Cosmos DB as a backend database.
+* Install [Scalar DB on DynamoDB prerequisites](https://github.com/scalar-labs/scalardb/blob/master/docs/getting-started-with-scalardb-on-dynamodb.md#install-prerequisites) if you use DynamoDB as a backend database.
 * Please install [Node.js](https://nodejs.org/en/download/)
 
 Here we assume Oracle JDK 8, Node.js, and the underlying storage/database such as Cassandra are properly configured before starting this demonstration.
@@ -87,15 +87,15 @@ The [**scalardb.properties**](backend/QA/src/main/resources/scalardb.properties)
 
 **For Cassandra**
 
-Please follow [Configure Scalar DB on Cassandra](https://github.com/scalar-labs/scalardb/blob/master/docs/getting-started-with-cassandra.md#configure-scalar-db)
+Please follow [Configure Scalar DB on Cassandra](https://github.com/scalar-labs/scalardb/blob/master/docs/getting-started-with-scalardb-on-cassandra.md#configure-scalar-db)
 
 **For Cosmos DB**
 
-Please follow [Configure Scalar DB on Cosmos DB](https://github.com/scalar-labs/scalardb/blob/master/docs/getting-started-with-cosmosdb.md#configure-scalar-db)
+Please follow [Configure Scalar DB on Cosmos DB](https://github.com/scalar-labs/scalardb/blob/master/docs/getting-started-with-scalardb-on-cosmosdb.md#configure-scalar-db)
 
 **For DynamoDB**
 
-Please follow [Configure Scalar DB on DynamoDB](https://github.com/scalar-labs/scalardb/blob/master/docs/getting-started-with-dynamodb.md#configure-scalar-db)
+Please follow [Configure Scalar DB on DynamoDB](https://github.com/scalar-labs/scalardb/blob/master/docs/getting-started-with-scalardb-on-dynamodb.md#configure-scalar-db)
 
 #### Boot up the backend API
 
