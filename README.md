@@ -38,15 +38,17 @@ We will explain how to develop this application with Scalar DB and what differs 
 
 This document contains different underlying storage/database (such as Cassandra, Cosmos DB) set up and configurations, Please follow any one of them.
 
-## Install prerequisites and Configure Scalar DB
+## Run the application
 
-Following softwares and Scalar DB connection configuration are required to start the demonstration.
+### Install and configure
 
-* **Install prerequisites** and **Configure Scalar DB** configuration ([**scalardb.properties**](backend/QA/src/main/resources/scalardb.properties)) file based on backend database. 
+Please install prerequisites and configure Scalar DB to start the demonstration.
+
+* Install prerequisites and configure Scalar DB ([**scalardb.properties**](backend/QA/src/main/resources/scalardb.properties)) file on the basis of backend database. 
     * Follow [Getting Started with Scalar DB on Cassandra](https://github.com/scalar-labs/scalardb/blob/master/docs/getting-started-with-scalardb-on-cassandra.md) if you use Cassandra as a backend database.
     * Follow [Getting Started with Scalar DB on Cosmos DB](https://github.com/scalar-labs/scalardb/blob/master/docs/getting-started-with-scalardb-on-cosmosdb.md) if you use Cosmos DB as a backend database.
     * Follow [Getting Started with Scalar DB on DynamoDB](https://github.com/scalar-labs/scalardb/blob/master/docs/getting-started-with-scalardb-on-dynamodb.md) if you use DynamoDB as a backend database.
-* Please install [Node.js](https://nodejs.org/en/download/)
+* Install [Node.js](https://nodejs.org/en/download/)
 
 Here we assume Oracle JDK 8, Node.js, and the underlying storage/database such as Cassandra are properly configured before starting this demonstration.
 
