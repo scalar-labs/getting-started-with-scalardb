@@ -94,11 +94,16 @@ public class QuestionDao {
   }
 
   /** Insert a question with transaction */
-  public void put(QuestionRecord record, DistributedTransaction transaction) {
+  public void put(QuestionRecord record, DistributedTransaction transaction) throws DaoException {
     Put put = createPutWith(record);
     put.withConsistency(Consistency.LINEARIZABLE);
 
-    transaction.put(put);
+    try {
+      transaction.put(put);
+    } catch (CrudException ce) {
+      String errorMsg = "Error: Insert a question with transaction";
+      throw new DaoException(errorMsg, ce);
+    }
     log.info("PUT completed for " + record);
   }
 
@@ -219,11 +224,16 @@ public class QuestionDao {
       long createdAt,
       long updatedAt,
       int numAnswer,
-      DistributedTransaction transaction) {
+      DistributedTransaction transaction) throws DaoException {
     Put put = createPutWithForUpdate(date, createdAt, updatedAt, numAnswer);
     put.withConsistency(Consistency.LINEARIZABLE);
 
-    transaction.put(put);
+    try {
+      transaction.put(put);
+    } catch (CrudException ce) {
+      String errorMsg = "Error: Update the timestamp of the last update and the number of answer";
+      throw new DaoException(errorMsg, ce);
+    }
     log.info(
         "PUT completed for : date "
             + date

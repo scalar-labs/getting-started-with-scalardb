@@ -14,9 +14,12 @@ import com.example.qa.service.ServiceException;
 import com.example.qa.util.DateUtils;
 import com.scalar.db.api.DistributedTransaction;
 import com.scalar.db.api.DistributedTransactionManager;
+import com.scalar.db.exception.transaction.AbortException;
 import com.scalar.db.exception.transaction.CommitException;
-import com.scalar.db.exception.transaction.UnknownTransactionStatusException;
+import com.scalar.db.exception.transaction.TransactionException;
 import java.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
@@ -32,6 +35,7 @@ public class QuestionServiceForTransaction implements QuestionService {
   private final QuestionDao questionDao;
   private final AnswerDao answerDao;
   private final FirstQuestionDateDao firstQuestionDateDao;
+  private final Logger log = LoggerFactory.getLogger(this.getClass());
 
   @Autowired
   public QuestionServiceForTransaction(
@@ -61,14 +65,16 @@ public class QuestionServiceForTransaction implements QuestionService {
             0L,
             0);
 
-    DistributedTransaction transaction = transactionManager.start();
-    questionDao.put(record, transaction);
+    DistributedTransaction transaction = null;
 
     // If the question is the first inserted in the storage, save its creation day on a separate day
     // that will be used
     // as a lower boundary when looking up questions
     Optional<String> firstQuestionDate = null;
     try {
+      transaction = transactionManager.start();
+      questionDao.put(record, transaction);
+
       firstQuestionDate = firstQuestionDateDao.get(transaction);
 
       if (!firstQuestionDate.isPresent()) {
@@ -79,12 +85,20 @@ public class QuestionServiceForTransaction implements QuestionService {
       transaction.commit();
 
     } catch (DaoException e) {
-      transaction.abort();
+      try {
+        transaction.abort();
+      } catch (AbortException ae){
+        log.error(ae.getMessage(), ae);
+      }
       throw new ServiceException(e.getMessage(), e);
     } catch (CommitException e) {
-      transaction.abort();
+      try {
+        transaction.abort();
+      } catch (AbortException ae){
+        log.error(ae.getMessage(), ae);
+      }
       throw new ServiceException("Error creating first question date or inserting a question", e);
-    } catch (UnknownTransactionStatusException e) {
+    } catch (TransactionException e) {
       throw new com.example.qa.service.UnknownTransactionStatusException(
           "Error : the transaction to insert a question is in an unknown state", e);
     }
@@ -95,10 +109,11 @@ public class QuestionServiceForTransaction implements QuestionService {
   /** Retrieve the question by its id* */
   public HttpGetQuestionResponse get(long id) throws ServiceException {
 
-    DistributedTransaction transaction = transactionManager.start();
+    DistributedTransaction transaction = null;
     QuestionRecord question = null;
     List<AnswerRecord> answers = null;
     try {
+      transaction = transactionManager.start();
       String date = DateUtils.millisToDateStr(id, DateUtils.FORMAT_YYYYMMDD);
       question = questionDao.get(date, id, transaction);
       // Get the answers of the question
@@ -106,20 +121,32 @@ public class QuestionServiceForTransaction implements QuestionService {
       if (question != null) {
         answers = answerDao.scan(question.getCreatedAt(), transaction);
       } else {
-        transaction.abort();
+        try {
+          transaction.abort();
+        } catch (AbortException ae){
+          log.error(ae.getMessage(), ae);
+        }
         throw new QuestionNotFoundException(date, id);
       }
       transaction.commit();
 
     } catch (DaoException e) {
-      transaction.abort();
+      try {
+        transaction.abort();
+      } catch (AbortException ae){
+        log.error(ae.getMessage(), ae);
+      }
       throw new ServiceException(e.getMessage(), e);
     } catch (CommitException e) {
-      transaction.abort();
+      try {
+        transaction.abort();
+      } catch (AbortException ae){
+        log.error(ae.getMessage(), ae);
+      }
       throw new ServiceException(
           "Error retrieving question or retrieving the answer associated with the question " + id,
           e);
-    } catch (UnknownTransactionStatusException e) {
+    } catch (TransactionException e) {
       throw new com.example.qa.service.UnknownTransactionStatusException(
           "Error : the transaction to retrieve the question( createdAt : "
               + id
@@ -141,9 +168,10 @@ public class QuestionServiceForTransaction implements QuestionService {
    */
   public List<HttpGetQuestionResponse> get(String start, int minimal) throws ServiceException {
     List<HttpGetQuestionResponse> questionList = new ArrayList<>();
-    DistributedTransaction transaction = transactionManager.start();
+    DistributedTransaction transaction = null;
 
     try {
+      transaction = transactionManager.start();
       Optional<String> firstQuestionDate = firstQuestionDateDao.get(transaction);
       if (!firstQuestionDate.isPresent()) {
         return questionList;
@@ -173,14 +201,18 @@ public class QuestionServiceForTransaction implements QuestionService {
       }
       transaction.commit();
     } catch (CommitException | DaoException e) {
-      transaction.abort();
+      try {
+        transaction.abort();
+      } catch (AbortException ae){
+        log.error(ae.getMessage(), ae);
+      }
       throw new ServiceException(
           "Error retrieving first question date so as to perform a scan or retrieving multiple questions from day: "
               + start
               + " with minimal = "
               + minimal,
           e);
-    } catch (UnknownTransactionStatusException e) {
+    } catch (TransactionException e) {
       throw new com.example.qa.service.UnknownTransactionStatusException(
           "Error : the transaction to retrieve questions is in an unknown state", e);
     }

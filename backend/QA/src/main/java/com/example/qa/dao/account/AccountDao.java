@@ -53,10 +53,16 @@ public class AccountDao {
   }
 
   /** Insert/update an account in the storage */
-  public void put(String email, String password, DistributedTransaction transaction) {
+  public void put(String email, String password,
+                  DistributedTransaction transaction) throws DaoException {
     Put put = createPutWith(email, password);
     put.withConsistency(Consistency.LINEARIZABLE);
-    transaction.put(put);
+    try {
+      transaction.put(put);
+    } catch (CrudException ce){
+      String errorMsg = "error PUT " + email;
+      throw new DaoException(errorMsg, ce);
+    }
     log.info("PUT completed for email " + email);
   }
 

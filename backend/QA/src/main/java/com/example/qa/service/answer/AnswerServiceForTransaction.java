@@ -11,8 +11,9 @@ import com.example.qa.service.ServiceException;
 import com.example.qa.util.DateUtils;
 import com.scalar.db.api.DistributedTransaction;
 import com.scalar.db.api.DistributedTransactionManager;
+import com.scalar.db.exception.transaction.AbortException;
 import com.scalar.db.exception.transaction.CommitException;
-import com.scalar.db.exception.transaction.UnknownTransactionStatusException;
+import com.scalar.db.exception.transaction.TransactionException;
 import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,12 +51,13 @@ public class AnswerServiceForTransaction implements AnswerService {
    */
   @Override
   public void put(HttpPutAnswerRequest request) throws ServiceException {
-    DistributedTransaction transaction = transactionManager.start();
+    DistributedTransaction transaction = null;
     QuestionRecord question = null;
     String date =
         DateUtils.millisToDateStr(request.getQuestionCreatedAt(), DateUtils.FORMAT_YYYYMMDD);
     long questionCreatedAt = request.getQuestionCreatedAt();
     try {
+      transaction = transactionManager.start();
       question = questionDao.get(date, questionCreatedAt, transaction);
 
       if (question == null) {
@@ -82,13 +84,21 @@ public class AnswerServiceForTransaction implements AnswerService {
           transaction);
       transaction.commit();
     } catch (DaoException e) {
-      transaction.abort();
+      try {
+        transaction.abort();
+      } catch (AbortException ae){
+        log.error(ae.getMessage(), ae);
+      }
       throw new ServiceException(e.getMessage(), e);
     } catch (CommitException e) {
-      transaction.abort();
+      try {
+        transaction.abort();
+      } catch (AbortException ae) {
+        log.error(ae.getMessage(), ae);
+      }
       throw new ServiceException(
           "Error adding an answer to the question " + question.getCreatedAt(), e);
-    } catch (UnknownTransactionStatusException e) {
+    } catch (TransactionException e) {
       throw new com.example.qa.service.UnknownTransactionStatusException(
           "Error : the transaction to add an answer to the question is an unknown state", e);
     }

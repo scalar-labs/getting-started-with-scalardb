@@ -54,11 +54,16 @@ public class AnswerDao {
   }
 
   /** Put/update an answer with transaction */
-  public void put(AnswerRecord record, DistributedTransaction transaction) {
+  public void put(AnswerRecord record, DistributedTransaction transaction) throws DaoException {
     Put put = createPutWith(record);
     put.withConsistency(Consistency.LINEARIZABLE);
 
-    transaction.put(put);
+    try {
+      transaction.put(put);
+    } catch (CrudException ce) {
+      String errorMsg = "Error: PUT/update an answer with transaction";
+      throw new DaoException(errorMsg, ce);
+    }
     log.info("PUT completed for " + record);
   }
 

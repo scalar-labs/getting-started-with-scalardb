@@ -8,9 +8,12 @@ import com.example.qa.dao.account.AccountDao;
 import com.example.qa.dao.account.AccountRecord;
 import com.scalar.db.api.DistributedTransaction;
 import com.scalar.db.api.DistributedTransactionManager;
+import com.scalar.db.exception.transaction.AbortException;
 import com.scalar.db.exception.transaction.CommitException;
 import io.jsonwebtoken.Jwts;
 import javax.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,6 +25,7 @@ import org.springframework.stereotype.Component;
 @Component("com.example.qa.security.JWTAuthenticationServiceForTransaction")
 class JWTAuthenticationServiceForTransaction extends JWTAuthenticationService {
   private final DistributedTransactionManager transactionManager;
+  private final Logger log = LoggerFactory.getLogger(this.getClass());
 
   @Autowired
   public JWTAuthenticationServiceForTransaction(
@@ -36,7 +40,8 @@ class JWTAuthenticationServiceForTransaction extends JWTAuthenticationService {
    * @param request the HTTP request
    * @return if the authentication is successful, return an Authentication object
    */
-  Authentication verifyAuthentication(HttpServletRequest request) throws AuthenticationException {
+  Authentication verifyAuthentication(HttpServletRequest request)
+          throws AuthenticationException {
     String token = request.getHeader(HEADER_STRING);
     if (token != null) {
       String user =
@@ -47,14 +52,19 @@ class JWTAuthenticationServiceForTransaction extends JWTAuthenticationService {
               .getSubject();
       // Verify the user specified in the JWT still exist
       AccountRecord account = null;
-      DistributedTransaction transaction = transactionManager.start();
+      DistributedTransaction transaction = null;
       try {
+        transaction = transactionManager.start();
         account = accountDao.get(user, transaction);
         transaction.commit();
       } catch (CommitException | DaoException e) {
-        transaction.abort();
+        try {
+          transaction.abort();
+        } catch (AbortException ae) {
+          log.error("Error: the transaction failed", ae);
+        }
         throw new AuthenticationException("Error retrieving user to validate JWT authenticity", e);
-      } catch (com.scalar.db.exception.transaction.UnknownTransactionStatusException e) {
+      } catch (com.scalar.db.exception.transaction.TransactionException e) {
         throw new UnknownTransactionStatusException(
             "Error : the transaction to retrieve the user associated with the JWT is in an unknown state",
             e);

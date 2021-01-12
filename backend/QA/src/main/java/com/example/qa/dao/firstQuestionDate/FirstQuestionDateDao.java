@@ -77,11 +77,17 @@ public class FirstQuestionDateDao {
   }
 
   /** Insert the date of the oldest question stored in the storage with transaction */
-  public void put(String date, DistributedTransaction transaction) {
+  public void put(String date, DistributedTransaction transaction) throws DaoException {
     Put put = createPutWith(date);
     put.withConsistency(Consistency.LINEARIZABLE);
 
-    transaction.put(put);
+    try {
+      transaction.put(put);
+    } catch (CrudException ce) {
+      String errorMsg = "Error: Insert the date of the oldest question stored in the storage " +
+              "with transaction";
+      throw new DaoException(errorMsg, ce);
+    }
     log.info("PUT completed for " + date);
   }
 
