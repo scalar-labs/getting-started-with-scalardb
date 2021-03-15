@@ -146,6 +146,7 @@ public class QuestionServiceForTransaction implements QuestionService {
     try {
       Optional<String> firstQuestionDate = firstQuestionDateDao.get(transaction);
       if (!firstQuestionDate.isPresent()) {
+        transaction.commit();
         return questionList;
       }
       // start Date
